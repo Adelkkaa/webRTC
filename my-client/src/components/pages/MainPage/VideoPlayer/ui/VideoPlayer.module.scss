@@ -1,0 +1,19 @@
+.videoContainer {
+  display: grid;
+  justify-content: center;
+}
+
+.videoPaper {
+  padding: 10px;
+  border: 2px solid var(--main-black);
+  margin: 10px;
+  background-color: var(--main-white-bg);
+}
+
+.videoTitle {
+  text-align: center;
+}
+
+.video {
+  width: 550px;
+}

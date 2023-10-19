@@ -1,0 +1,68 @@
+.typography {
+  &.black {
+    color: var(--main-black);
+  }
+
+  &.gray {
+    color: var(--main-gray);
+  }
+
+  &.green {
+    color: var(--main-green);
+  }
+
+  &.white {
+    color: var(--main-white);
+  }
+
+  &.red {
+    color: var(--main-red);
+  }
+
+  &.invert {
+    color: var(--main-white);
+    opacity: 0.7;
+  }
+
+  &.level6 {
+    font-size: var(--level-6);
+  }
+
+  &.level5 {
+    font-size: var(--level-5);
+    line-height: 1.75rem;
+  }
+
+  &.level4 {
+    font-size: var(--level-4);
+  }
+
+  &.level3 {
+    font-size: var(--level-3);
+  }
+
+  &.level2 {
+    font-size: var(--level-2);
+    line-height: 4rem;
+  }
+
+  &.level1 {
+    font-size: var(--level-1);
+  }
+
+  &.regular {
+    font-weight: 400;
+  }
+
+  &.medium {
+    font-weight: 500;
+  }
+
+  &.semibold {
+    font-weight: 600;
+  }
+
+  &.bold {
+    font-weight: 700;
+  }
+}
