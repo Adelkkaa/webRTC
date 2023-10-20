@@ -1,0 +1,33 @@
+.container {
+  width: 600px;
+  margin: 35px 0;
+  padding: 0;
+}
+
+.root {
+  display: flex;
+  flex-direction: column;
+}
+
+.rootWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.paper {
+  padding: 10px 20px;
+  background-color: var(--main-hint);
+  border: 2px solid var(--main-black);
+}
+
+.rootItem {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+}
+
+.margin {
+  margin-top: 20px;
+}

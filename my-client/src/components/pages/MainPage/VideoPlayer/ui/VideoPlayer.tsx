@@ -1,12 +1,18 @@
 import { Typography } from "@/shared/Typography";
 import styles from "./VideoPlayer.module.scss";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { SocketContext, TSocketContext } from "@/app/SocketContext";
 
 export const VideoPlayer = () => {
   const { name, callAccepted, userVideo, callEnded, stream, call, myVideo } =
     useContext(SocketContext) as TSocketContext;
-  console.log(stream);
+
+  useEffect(() => {
+    if (myVideo && myVideo.current && stream) {
+      myVideo.current.srcObject = stream;
+      myVideo.current.onloadedmetadata = () => myVideo.current?.play();
+    }
+  }, [stream]);
   return (
     <div className={styles.videoContainer}>
       {stream && (

@@ -47,14 +47,13 @@ const ContextProvider: FC<PropsWithChildren> = ({ children }) => {
   const userVideo = useRef<HTMLVideoElement | null>(null);
   const currentConnection = useRef<Peer.Instance | null>(null);
   useEffect(() => {
-    navigator.mediaDevices
+    const promise = navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
       .then((currentStream) => {
         setStream(currentStream);
-        if (myVideo && myVideo.current) {
-          myVideo.current.srcObject = currentStream;
-        }
-      });
+      })
+      .catch((e) => console.error("Ошибочка " + e.message));
+    console.log(promise);
     socket.on("me", (id) => setMe(id));
 
     socket.on("calluser", ({ from, name: callerName, signal }) => {

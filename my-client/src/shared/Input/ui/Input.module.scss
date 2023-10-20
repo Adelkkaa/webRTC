@@ -1,0 +1,95 @@
+.formGroup {
+  position: relative;
+  width: 100%;
+  padding-top: 4px;
+
+  &Disabled {
+    pointer-events: none;
+  }
+  input:-webkit-autofill {
+    border-bottom: 1px solid var(--main-green);
+    -webkit-text-fill-color: var(--main-black);
+    -webkit-box-shadow: 0 0 0px 1000px #000 inset;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+}
+
+.formField {
+  position: relative;
+  border: none;
+  color: var(--main-black);
+  transition: border-color 0.2s;
+  outline: 0;
+  width: 100%;
+  border-radius: 0px;
+  border-bottom: 1px solid var(--main-black);
+  padding: 10px 0;
+  font-size: 16px;
+  background-color: transparent;
+  &Error {
+    border-bottom: 1px solid var(--main-red) !important;
+  }
+  &Disabled {
+    border-bottom: 1px solid #90949d;
+    color: #90949d;
+  }
+  &:hover {
+    border-bottom: 1px solid var(--main-green);
+  }
+  &:focus {
+    border-bottom: 1px solid var(--main-green);
+    padding-bottom: 10px;
+  }
+}
+
+.formField::placeholder {
+  color: transparent;
+}
+
+.formField:placeholder-shown ~ .formLabel {
+  font-size: 16px;
+  font-weight: 400;
+  cursor: text;
+  top: 11px;
+  color: #90949d;
+  pointer-events: none;
+  user-select: none;
+}
+.formField:placeholder-shown ~ .formLabelDisabled {
+  border-bottom: 1px solid #90949d;
+  color: #545454 !important;
+  user-select: none;
+}
+
+.formField:placeholder-shown ~ .formLabelError {
+  color: var(--main-red) !important;
+  user-select: none;
+}
+
+.formLabel,
+.formField:focus ~ .formLabel {
+  position: absolute;
+  top: -5px;
+  font-size: 12px;
+  display: block;
+  transition: 0.2s;
+  color: #90949d;
+  user-select: none;
+}
+
+.formField:focus ~ .formLabelError {
+  color: var(--main-red);
+}
+
+.message {
+  margin-top: 4px;
+  color: #90949d;
+
+  &Error {
+    color: var(--main-red) !important;
+  }
+
+  &Disabled {
+    color: #545454 !important;
+  }
+}
