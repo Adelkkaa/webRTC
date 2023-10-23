@@ -13,6 +13,8 @@ export const VideoPlayer = () => {
       myVideo.current.onloadedmetadata = () => myVideo.current?.play();
     }
   }, [stream]);
+  console.log(callAccepted, callEnded);
+
   return (
     <div className={styles.videoContainer}>
       {stream && (

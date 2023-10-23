@@ -40,7 +40,7 @@ export const Options: FC<PropsWithChildren> = ({ children }) => {
                   })
                 }
               >
-                <Button onClick={() => {}}>Copy Your ID</Button>
+                <Button>Copy Your ID</Button>
               </CopyToClipboard>
             </div>
             <div className={styles.rootItem}>
@@ -55,7 +55,14 @@ export const Options: FC<PropsWithChildren> = ({ children }) => {
               {callAccepted && !callEnded ? (
                 <Button onClick={leaveCall}>Hang Up</Button>
               ) : (
-                <Button onClick={() => callUser(idToCall)}>Call</Button>
+                <Button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    callUser(idToCall);
+                  }}
+                >
+                  Call
+                </Button>
               )}
             </div>
           </div>

@@ -8,6 +8,11 @@ import React, {
 } from "react";
 import { io } from "socket.io-client";
 import Peer from "simple-peer";
+import * as process from "process";
+
+(window as any).global = window;
+(window as any).process = process;
+(window as any).Buffer = [];
 
 type TCallState = {
   isReceivedCall: boolean;
@@ -25,6 +30,7 @@ type TSocketContext = {
   callEnded: boolean;
   myVideo: React.MutableRefObject<HTMLVideoElement | null>;
   userVideo: React.MutableRefObject<HTMLVideoElement | null>;
+  currentConnection: React.MutableRefObject<Peer.Instance | null>;
   setName: (arg: string) => void;
   answerCall: () => void;
   callUser: (id: string | number) => void;
@@ -47,17 +53,26 @@ const ContextProvider: FC<PropsWithChildren> = ({ children }) => {
   const userVideo = useRef<HTMLVideoElement | null>(null);
   const currentConnection = useRef<Peer.Instance | null>(null);
   useEffect(() => {
-    const promise = navigator.mediaDevices
+    navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
       .then((currentStream) => {
         setStream(currentStream);
       })
       .catch((e) => console.error("Ошибочка " + e.message));
-    console.log(promise);
+
     socket.on("me", (id) => setMe(id));
 
-    socket.on("calluser", ({ from, name: callerName, signal }) => {
+    socket.on("callUser", ({ from, name: callerName, signal }) => {
       setCall({ isReceivedCall: true, from, name: callerName, signal });
+    });
+
+    socket.on("callEnded", () => {
+      console.log("callEnded");
+      setCall(undefined);
+      setCallEnded(false);
+      userVideo.current = null;
+      currentConnection.current = null;
+      setCallAccepted(false);
     });
   }, []);
   const answerCall = () => {
@@ -71,7 +86,7 @@ const ContextProvider: FC<PropsWithChildren> = ({ children }) => {
 
     if (call) {
       peer.on("signal", (data) => {
-        socket.emit("answercall", { signal: data, to: call.from });
+        socket.emit("answerCall", { signal: data, to: call.from });
       });
 
       peer.signal(call.signal);
@@ -83,9 +98,7 @@ const ContextProvider: FC<PropsWithChildren> = ({ children }) => {
       }
     });
 
-    if (currentConnection && currentConnection.current) {
-      currentConnection.current = peer;
-    }
+    currentConnection.current = peer;
   };
   const callUser = (id: string | number) => {
     const peer = new Peer({
@@ -93,16 +106,15 @@ const ContextProvider: FC<PropsWithChildren> = ({ children }) => {
       trickle: false,
       stream,
     });
-    if (call) {
-      peer.on("signal", (data) => {
-        socket.emit("calluser", {
-          userToCall: id,
-          signalData: data,
-          from: me,
-          name,
-        });
+    peer.on("signal", (data) => {
+      socket.emit("callUser", {
+        userToCall: id,
+        signalData: data,
+        from: me,
+        name,
       });
-
+    });
+    if (call) {
       peer.signal(call.signal);
     }
 
@@ -111,20 +123,19 @@ const ContextProvider: FC<PropsWithChildren> = ({ children }) => {
         userVideo.current.srcObject = currentStream;
       }
     });
-    socket.on("callaccepted", (signal) => {
+    socket.on("callAccepted", (signal) => {
       setCallAccepted(true);
       peer.signal(signal);
     });
-    if (currentConnection && currentConnection.current) {
-      currentConnection.current = peer;
-    }
+
+    currentConnection.current = peer;
   };
   const leaveCall = () => {
     setCallEnded(true);
     if (currentConnection && currentConnection.current) {
       currentConnection.current.destroy();
     }
-    window.location.reload();
+    socket.disconnect();
   };
 
   return (
@@ -142,6 +153,7 @@ const ContextProvider: FC<PropsWithChildren> = ({ children }) => {
         callUser,
         leaveCall,
         answerCall,
+        currentConnection,
       }}
     >
       {children}
